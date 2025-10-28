@@ -8,7 +8,7 @@ import requests
 import appdirs
 from rich.console import Console
 from rich.prompt import Prompt
-from ruamel.yaml import YAML
+from ruamel import yaml
 
 
 def download_file(url: str, dest: Path) -> None:
@@ -41,15 +41,7 @@ def extract_zip(src: Path, dest: Path) -> None:
                 progress.update(task, advance=1)
     # Rename folder
     extracted_folder = dest / src.stem
-    stem_parts = src.stem.split('-')
-    if len(stem_parts) > 1:
-        extracted_folder.rename(dest / f"blender-{stem_parts[1]}")
-    else:
-        raise ValueError(f"Unexpected file naming convention: {src.stem}")
-    if len(stem_parts) > 1:
-        extracted_folder.rename(dest / f"blender-{stem_parts[1]}")
-    else:
-        raise ValueError(f"Unexpected file name format: {src.stem}")
+    extracted_folder.rename(dest / f"blender-{src.stem.split('-')[1]}")
 
 
 def extract_tar(src: Path, dest: Path) -> None:
@@ -85,27 +77,6 @@ def install_blender(version: str, install_dir: Path) -> None:
     elif os_type == "Linux":
         file_name = f"blender-{version}-linux-x64.tar.xz"
         extract_func = extract_tar
-    elif os_type == "Darwin":
-        machine = platform.machine()
-        if machine == "arm64":
-            file_name = f"blender-{version}-macos-arm64.dmg"
-        elif machine == "x86_64":
-            file_name = f"blender-{version}-macos-x64.dmg"
-        else:
-            print(f"Unsupported macOS architecture: {machine}")
-            sys.exit(1)
-        extract_func = None  # macOS .dmg files typically don't require extraction
-        print("macOS detected. Please install Blender manually from the downloaded .dmg file.")
-        # For macOS, we download but don't extract or expect a specific installation structure.
-        # We'll download the file and then exit gracefully after informing the user.
-        download_path = f"{base_url}Blender{version_major}/{file_name}"
-        dest_file = install_dir / file_name
-        print(f"Downloading Blender for macOS ({machine})...")
-        download_file(download_path, dest_file)
-        print(f"Download complete: {dest_file}")
-        print("Please open the .dmg file and drag Blender to your Applications folder.")
-        # We return here because the rest of the function assumes extraction and specific folder structure
-        return
     else:
         print("Unsupported OS")
         sys.exit(1)
@@ -113,19 +84,18 @@ def install_blender(version: str, install_dir: Path) -> None:
     download_path = f"{base_url}Blender{version_major}/{file_name}"
     dest_file = install_dir / file_name
 
-    # Check if Blender is already installed in the package directory (Skip for macOS as we return earlier)
+    # Check if Blender is already installed in the package directory
     if (install_dir / f"blender-{version}").exists():
         print(f"Blender {version} already installed.")
         return
 
-    # Download Blender (Skip for macOS as we return earlier)
+    # Download Blender
     download_file(download_path, dest_file)
 
-    # Extract Blender (Skip for macOS as we return earlier)
-    if extract_func:
-        extract_func(dest_file, install_dir)
+    # Extract Blender
+    extract_func(dest_file, install_dir)
 
-    # Clean up (Skip for macOS as we return earlier)
+    # Clean up
     dest_file.unlink()
 
 
@@ -167,9 +137,8 @@ def get_or_create_install_folder(install_folder_path: str = None) -> Path:
 def _load_config() -> dict:
     config_file = _get_or_create_config_file_path()
     if config_file.exists():
-        yaml = YAML(typ='safe')
         with open(config_file, "r") as f:
-            return yaml.load(f)
+            return yaml.safe_load(f)
     return {}
 
 
@@ -183,7 +152,6 @@ def _write_config(config: dict):
     # Create the directory if it doesn't exist
     if not config_file.parent.exists():
         config_file.parent.mkdir(parents=True, exist_ok=True)
-    yaml = YAML(typ='safe')
     with open(config_file, "w") as f:
         yaml.dump(config, f)
 

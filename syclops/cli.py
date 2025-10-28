@@ -96,6 +96,12 @@ parser.add_argument(
     help="Path to install folder",
     default=None,
 )
+parser.add_argument(
+    "-ui",
+    "--config_ui",
+    help="Launch the configuration UI for easier config file creation",
+    action="store_true",
+)
 
 
 def _run_subprocess(args, cwd=None, env=None, execution_info="Command"):
@@ -307,6 +313,20 @@ def _ensure_catalog_exists(install_folder: Path):
         _crawl_assets(install_folder)
 
 
+def _launch_config_ui():
+    """Launch the configuration UI"""
+    try:
+        from syclops.config_ui import main as ui_main
+        ui_main()
+    except ImportError as e:
+        console = Console()
+        console.print(f"Error: Could not import config UI: {e}", style="red")
+        console.print("Make sure PyYAML is installed: pip install PyYAML", style="yellow")
+    except Exception as e:
+        console = Console()
+        console.print(f"Error launching config UI: {e}", style="red")
+
+
 def main():
     args = parser.parse_args()
 
@@ -356,6 +376,9 @@ def main():
 
     elif args.dataset_path:
         dataset_viewer(args)
+
+    elif args.config_ui:
+        _launch_config_ui()
 
 
 if __name__ == "__main__":

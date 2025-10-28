@@ -8,7 +8,7 @@ import bpy
 from rich.logging import RichHandler
 from syclops import utility
 from syclops.blender.transformations import Transformations
-from ruamel.yaml import YAML
+from ruamel import yaml
 
 SEPARATOR = "#"
 SEPARATOR_LENGTH = 40
@@ -42,12 +42,13 @@ class Scene(object):
 
         self.output_path = Path(bpy.context.scene.render.filepath)
         self.configure_logging()
-        utility.set_seeds(job_description["seeds"])        # Write class_id_mapping to file
+        utility.set_seeds(job_description["seeds"])
+
+        # Write class_id_mapping to file
         class_id_mapping = utility.find_class_id_mapping(job_description)
         class_id_mapping_path = self.output_path / "class_id_mapping.yaml"
-        yaml_writer = YAML()
         with open(class_id_mapping_path, "w") as file:
-            yaml_writer.dump(class_id_mapping, file)
+            yaml.dump(class_id_mapping, file)
 
         self.tf_tree = Transformations()
         self.tf_tree.create_tf_tree(job_description["transformations"])

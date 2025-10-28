@@ -1,0 +1,44 @@
+name: Assets_own
+description: Assets for testing the pipeline
+
+assets:
+  Field:
+    type: environment_texture
+    tags: [field, sunlight, outdoors]
+    license: CC0
+    filepath: textures/bloem_field_sunrise_4k.hdr
+    filepath_md5: 7b8711804e3912f2259156be08fb5048
+    thumbnail:
+      - thumbnails/feld_sunrise.png
+  bbch_15:
+    type: model
+    tags: [beet, bbch_15]
+    license: CC0
+    filepath: models/plants/bbch_15.blend
+    thumbnail:
+      - thumbnails/bbch_15_thumb.png
+    filepath_md5: 392e4f12edc4d7c6d56cbf14ad4b781b
+  bbch_16:
+    type: model
+    tags: [beet, bbch_16]
+    license: CC0
+    filepath: models/plants/bbch_16.blend
+    thumbnail:
+      - thumbnails/bbch_16_thumb.png
+    filepath_md5: 84c63cd3f72cfad63fb8cf7430aa3247
+  bbch_17:
+    type: model
+    tags: [beet, bbch_17]
+    license: CC0
+    filepath: models/plants/bbch_17.blend
+    thumbnail:
+      - thumbnails/bbch_17_thumb.png
+    filepath_md5: 5b67db7cba62a4ffb07b85af4f650076
+  bbch_18:
+    type: model
+    tags: [beet, bbch_18]
+    license: CC0
+    filepath: models/plants/bbch_18.blend
+    thumbnail:
+      - thumbnails/bbch_18_thumb.png
+    filepath_md5: 84bb1e8f170891a7049672e63976222e

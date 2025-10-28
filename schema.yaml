@@ -1,0 +1,1092 @@
+$schema: http://json-schema.org/draft-07/schema#
+allOf:
+- if:
+    properties:
+      render_device:
+        const: GPU
+  then:
+    required:
+    - render_hardware
+definitions:
+  asset_models:
+    enum:
+    - Assets_own/bbch_15
+    - Assets_own/bbch_16
+    - Assets_own/bbch_17
+    - Assets_own/bbch_18
+    - Example Assets/Corn
+    - Example Assets/Plain Weeds
+    - Example Assets/ISO Object
+    type: string
+  blur:
+    additionalProperties: false
+    properties:
+      blur:
+        additionalProperties: false
+        description: Blur the texture using Gaussian blur with a specified kernel
+          size
+        properties:
+          kernel_size:
+            type: integer
+        required:
+        - kernel_size
+        type: object
+    type: object
+  clip:
+    additionalProperties: false
+    properties:
+      clip:
+        description: Clip texture values between specified minimum and maximum
+        items:
+          type: number
+        maxItems: 2
+        minItems: 2
+        type: array
+    type: object
+  contrast:
+    additionalProperties: false
+    properties:
+      contrast:
+        description: Adjust the contrast of the texture using a given factor
+        type: number
+    type: object
+  dilate:
+    additionalProperties: false
+    properties:
+      dilate:
+        additionalProperties: false
+        description: Dilate the texture with a specified kernel and iterations
+        properties:
+          iterations:
+            type: integer
+          kernel_size:
+            type: integer
+        required:
+        - kernel_size
+        - iterations
+        type: object
+    type: object
+  erode:
+    additionalProperties: false
+    properties:
+      erode:
+        additionalProperties: false
+        description: Erode the texture with a specified kernel and iterations
+        properties:
+          iterations:
+            type: integer
+          kernel_size:
+            type: integer
+        required:
+        - kernel_size
+        - iterations
+        type: object
+    type: object
+  image_texture_evaluation:
+    type: string
+  input_texture:
+    additionalProperties: false
+    properties:
+      input_texture:
+        description: Use another texture as input
+        type: string
+    type: object
+  keep_overlapp:
+    additionalProperties: false
+    properties:
+      keep_overlapp:
+        additionalProperties: false
+        description: Keep areas of the texture that overlap with another specified
+          texture
+        properties:
+          texture:
+            type: string
+        required:
+        - texture
+        type: object
+    type: object
+  math_expression:
+    additionalProperties: false
+    properties:
+      math_expression:
+        description: Adjust the texture with an expression. Use x as the image variable,
+          or use the name of a previously defined texture.
+        type: string
+    type: object
+  number_evaluation:
+    anyOf:
+    - type: number
+    - $ref: '#/definitions/sample_linear_number'
+    - $ref: '#/definitions/sample_normal_number'
+    - $ref: '#/definitions/sample_uniform_number'
+    - $ref: '#/definitions/sample_step_number'
+    - $ref: '#/definitions/sample_random_selection_number'
+  perlin:
+    additionalProperties: false
+    properties:
+      perlin:
+        additionalProperties: false
+        description: Create a Perlin noise texture
+        properties:
+          octaves:
+            type: integer
+        required:
+        - octaves
+        type: object
+    type: object
+  random_rectangles:
+    additionalProperties: false
+    properties:
+      random_rectangles:
+        additionalProperties: false
+        properties:
+          avg_height:
+            type: number
+          avg_width:
+            type: number
+          num_rectangles:
+            type: integer
+          std_height:
+            type: number
+          std_width:
+            type: number
+        required:
+        - num_rectangles
+        - avg_width
+        - std_width
+        - avg_height
+        - std_height
+        type: object
+    type: object
+  sample_linear_number:
+    properties:
+      linear:
+        description: Value starts with the first number and gets incremented every
+          timestep by the second number.
+        items:
+          type: number
+        maxItems: 2
+        minItems: 2
+        type: array
+    required:
+    - linear
+    type: object
+  sample_linear_vector:
+    properties:
+      linear:
+        description: Value starts with the first vector and gets incremented every
+          timestep by the second vector.
+        items:
+          $ref: '#/definitions/vector'
+        maxItems: 2
+        minItems: 2
+        type: array
+    required:
+    - linear
+    type: object
+  sample_normal_number:
+    properties:
+      normal:
+        description: Random value each timestep with the first number being the mean
+          and the second number being the standard deviation.
+        items:
+          type: number
+        maxItems: 2
+        minItems: 2
+        type: array
+    required:
+    - normal
+    type: object
+  sample_normal_vector:
+    properties:
+      normal:
+        description: Random vector each timestep with the first vector being the mean
+          and the second vector being the standard deviation.
+        items:
+          $ref: '#/definitions/vector'
+        maxItems: 2
+        minItems: 2
+        type: array
+    required:
+    - normal
+    type: object
+  sample_random_selection_number:
+    properties:
+      random_selection:
+        description: Each timestep will randomly pick an element from the list.
+        items:
+          type: number
+        type: array
+    required:
+    - random_selection
+    type: object
+  sample_random_selection_string:
+    properties:
+      random_selection:
+        description: Each timestep will randomly pick an element from the list.
+        items:
+          type: string
+        type: array
+    required:
+    - random_selection
+    type: object
+  sample_random_selection_vector:
+    properties:
+      random_selection:
+        description: Each timestep will randomly pick an element from the list.
+        items:
+          $ref: '#/definitions/vector'
+        type: array
+    required:
+    - random_selection
+    type: object
+  sample_selection_asset:
+    properties:
+      selection_asset:
+        description: Randomly pick an asset from the given library that satisfies
+          the type filter.
+        properties:
+          library:
+            type: string
+          type:
+            type: string
+        required:
+        - type
+        - library
+        type: object
+    required:
+    - selection_asset
+    type: object
+  sample_selection_folder:
+    properties:
+      selection_folder:
+        description: DEPRECATED
+        type: string
+    required:
+    - selection_folder
+    type: object
+  sample_step_number:
+    properties:
+      step:
+        description: Each timestep will pick the index from the list.
+        items:
+          type: number
+        type: array
+    required:
+    - step
+    type: object
+  sample_step_string:
+    properties:
+      step:
+        description: Each timestep will pick the index from the list.
+        items:
+          type: string
+        type: array
+    required:
+    - step
+    type: object
+  sample_step_vector:
+    properties:
+      step:
+        description: Each timestep will pick the index from the list.
+        items:
+          $ref: '#/definitions/vector'
+        type: array
+    required:
+    - step
+    type: object
+  sample_uniform_number:
+    properties:
+      uniform:
+        description: Random number each timestep with the first number being the lower
+          bound and the second number being the upper bound.
+        items:
+          type: number
+        maxItems: 2
+        minItems: 2
+        type: array
+    required:
+    - uniform
+    type: object
+  sample_uniform_vector:
+    properties:
+      uniform:
+        description: Random vector each timestep with the first vector being the lower
+          bound and the second vector being the upper bound.
+        items:
+          $ref: '#/definitions/vector'
+        maxItems: 2
+        minItems: 2
+        type: array
+    required:
+    - uniform
+    type: object
+  sample_wildcard:
+    properties:
+      selection_wildcard:
+        description: Randomly select an asset from a library that fits the given wildcard.
+        properties:
+          library:
+            type: string
+          wildcard:
+            type: string
+        required:
+        - wildcard
+        - library
+        type: object
+    required:
+    - selection_asset
+    type: object
+  string_evaluation:
+    anyOf:
+    - type: string
+    - $ref: '#/definitions/sample_step_string'
+    - $ref: '#/definitions/sample_random_selection_string'
+    - $ref: '#/definitions/sample_selection_folder'
+    - $ref: '#/definitions/sample_selection_asset'
+    - $ref: '#/definitions/sample_wildcard'
+  syclops_output_keypoints:
+    description: Positions of keypoints in image space.
+    items:
+      properties:
+        debug_breakpoint:
+          description: Wether to break and open Blender before rendering. Only works
+            if scene debugging is active.
+          type: boolean
+        id:
+          description: Unique identifier of the output
+          type: string
+      required:
+      - id
+      type: object
+    maxItems: 1
+    minItems: 1
+    type: array
+  syclops_output_object_positions:
+    description: Global position of all objects in the scene. Listed with their class
+      ids, xyz [m] location, xyz [rad] euler angles and xyz scale in a json.
+    items:
+      properties:
+        debug_breakpoint:
+          description: Wether to break and open Blender before rendering. Only works
+            if scene debugging is active.
+          type: boolean
+        id:
+          description: Unique identifier of the output
+          type: string
+      required:
+      - id
+      type: object
+    maxItems: 1
+    minItems: 1
+    type: array
+  syclops_output_pixel_annotation:
+    description: Variety of pixel level annotations of the sensor image.
+    items:
+      properties:
+        debug_breakpoint:
+          description: Wether to break and open Blender before rendering. Only works
+            if scene debugging is active.
+          type: boolean
+        depth:
+          description: Z Depth of a pixel to the camera in meters.
+          properties:
+            id:
+              description: Unique identifier of the output
+              type: string
+          type: object
+        instance_segmentation:
+          description: Instance segmentation output. Each object will have a unique
+            id in the image.
+          properties:
+            id:
+              description: Unique identifier of the output
+              type: string
+          type: object
+        object_volume:
+          description: Volume of the objects in cm^3.
+          properties:
+            id:
+              description: Unique identifier of the output
+              type: string
+          type: object
+        pointcloud:
+          description: 3D coordinates of each pixel in camera coordinates in meters.
+          properties:
+            id:
+              description: Unique identifier of the output
+              type: string
+          type: object
+        semantic_segmentation:
+          description: Semantic segmentation output. Pixels will have the class id
+            value of the object.
+          properties:
+            id:
+              description: Unique identifier of the output
+              type: string
+          type: object
+      type: object
+    type: array
+  syclops_output_rgb:
+    description: RGB color output of the sensor.
+    items:
+      properties:
+        debug_breakpoint:
+          description: Wether to break and open Blender before rendering. Only works
+            if scene debugging is active.
+          type: boolean
+        id:
+          description: Unique identifier of the output
+          type: string
+        samples:
+          description: Render quality of the image. More means a better quality and
+            more samples per pixel.
+          type: integer
+      required:
+      - id
+      - samples
+      type: object
+    type: array
+  transformation:
+    properties:
+      children:
+        additionalProperties:
+          $ref: '#/definitions/transformation'
+        type: object
+      location:
+        $ref: '#/definitions/vector_evaluation'
+        description: Location in meters
+      rotation:
+        $ref: '#/definitions/vector_evaluation'
+        description: Euler angles in radians
+      velocities:
+        properties:
+          rotation:
+            $ref: '#/definitions/vector_evaluation'
+            description: Rotation velocity in radians per second
+          translation:
+            $ref: '#/definitions/vector_evaluation'
+            description: Translation velocity in meters per second
+        required:
+        - translation
+        - rotation
+        type: object
+    required:
+    - location
+    - rotation
+    type: object
+  vector:
+    items:
+      type: number
+    maxItems: 3
+    minItems: 3
+    type: array
+  vector_evaluation:
+    anyOf:
+    - $ref: '#/definitions/vector'
+    - $ref: '#/definitions/sample_linear_vector'
+    - $ref: '#/definitions/sample_normal_vector'
+    - $ref: '#/definitions/sample_uniform_vector'
+    - $ref: '#/definitions/sample_step_vector'
+    - $ref: '#/definitions/sample_random_selection_vector'
+properties:
+  denoising_algorithm:
+    description: Denoising algorithm to use. OPTIX is only available for RTX GPUs.
+    enum:
+    - OPTIX
+    - OPENIMAGEDENOISE
+    type: string
+  denoising_enabled:
+    type: boolean
+  global_evaluators:
+    additionalProperties:
+      anyOf:
+      - type: number
+      - $ref: '#/definitions/sample_linear_vector'
+      - $ref: '#/definitions/sample_linear_number'
+      - $ref: '#/definitions/sample_normal_vector'
+      - $ref: '#/definitions/sample_normal_number'
+      - $ref: '#/definitions/sample_uniform_vector'
+      - $ref: '#/definitions/sample_uniform_number'
+      - $ref: '#/definitions/sample_step_number'
+      - $ref: '#/definitions/sample_step_vector'
+      - $ref: '#/definitions/sample_step_string'
+      - $ref: '#/definitions/sample_random_selection_number'
+      - $ref: '#/definitions/sample_random_selection_vector'
+      - $ref: '#/definitions/sample_random_selection_string'
+      - $ref: '#/definitions/sample_selection_folder'
+      - $ref: '#/definitions/sample_selection_asset'
+      - $ref: '#/definitions/sample_wildcard'
+    type: object
+  render_device:
+    enum:
+    - GPU
+    - CPU
+    type: string
+  render_hardware:
+    enum:
+    - CUDA
+    - OPTIX
+    type: string
+  scene:
+    additionalProperties: false
+    properties:
+      syclops_plugin_crop:
+        description: Scatters 3D models on a floor object in a grid pattern.
+        items:
+          properties:
+            class_id:
+              description: Class ID for ground truth output.
+              type: integer
+            class_id_offset:
+              additionalProperties:
+                type: integer
+              description: Class ID offset for ground truth output. The keys are the
+                name of the material and the values are the offsets.
+              type: object
+            crop_angle:
+              $ref: '#/definitions/number_evaluation'
+              description: Global orientation of the row direction in degrees.
+            decimate_mesh_factor:
+              description: Factor between 0-1 that decimates the number of vertices
+                of the mesh. Lower means less vertices.
+              type: number
+            density_map:
+              $ref: '#/definitions/image_texture_evaluation'
+              description: Texture that alters the density. It is normalized to 0-1.
+            floor_object:
+              description: Name of the floor object to scatter on.
+              type: string
+            max_texture_size:
+              description: Maximum texture size in pixel. Will reduce the texture
+                to save GPU RAM.
+              type: integer
+            models:
+              description: 3D assets to scatter.
+              oneOf:
+              - items:
+                  $ref: '#/definitions/asset_models'
+                type: array
+              - $ref: '#/definitions/asset_models'
+            name:
+              description: Unique identifier of the plugin
+              type: string
+            plant_distance:
+              $ref: '#/definitions/number_evaluation'
+              description: Intra row distance between plants in meters.
+            plant_standard_deviation:
+              $ref: '#/definitions/number_evaluation'
+              description: Standard deviation of the intra row distance in meters.
+            row_distance:
+              $ref: '#/definitions/number_evaluation'
+              description: Distance between rows in meters.
+            row_standard_deviation:
+              $ref: '#/definitions/number_evaluation'
+              description: Standard deviation of the row distance in meters.
+            scale_standard_deviation:
+              $ref: '#/definitions/number_evaluation'
+              description: Scale variance of the scattered objects.
+          required:
+          - name
+          - models
+          - floor_object
+          - scale_standard_deviation
+          - row_distance
+          - plant_distance
+          - crop_angle
+          - row_standard_deviation
+          - plant_standard_deviation
+          type: object
+        type: array
+      syclops_plugin_environment:
+        description: Adds lighting and background to the scene.
+        items:
+          if:
+            properties:
+              type:
+                const: hdri_and_sun
+          properties:
+            environment_image:
+              $ref: '#/definitions/string_evaluation'
+              description: HDRI image to use as environment map
+            random_rotation:
+              description: Randomly rotate the environment map in every frame
+              type: boolean
+            sun_elevation:
+              $ref: '#/definitions/number_evaluation'
+              description: Elevation of the sun in radians
+            sun_rotation:
+              $ref: '#/definitions/number_evaluation'
+              description: Rotation of the sun in radians
+            type:
+              enum:
+              - hdri
+              - hdri_and_sun
+              type: string
+          then:
+            required:
+            - sun_elevation
+            - sun_rotation
+          type: object
+        type: array
+      syclops_plugin_ground:
+        description: Configures a floor plane for the scene.
+        items:
+          oneOf:
+          - not:
+              required:
+              - size
+              - texture
+              - displacement_texture
+            required:
+            - name
+            - object_path
+            - class_id
+          - not:
+              required:
+              - object_path
+            required:
+            - name
+            - size
+            - texture
+          properties:
+            class_id:
+              description: Class ID for ground truth output.
+              type: integer
+            class_id_offset:
+              additionalProperties:
+                type: integer
+              description: Class ID offset for ground truth output. The keys are the
+                name of the material and the values are the offsets.
+              type: object
+            displacement_texture:
+              $ref: '#/definitions/image_texture_evaluation'
+              description: Height map of the ground. If the texture is 16-bit, then
+                pixel value of 32768 means 0m height. Increasing a pixel value by
+                1 means a height difference of 0,5cm.
+            name:
+              description: Unique identifier of the plugin
+              type: string
+            object_path:
+              $ref: '#/definitions/asset_models'
+              description: 3D Object of the ground.
+            size:
+              description: Width and length of the ground in meters.
+              type: number
+            texture:
+              $ref: '#/definitions/string_evaluation'
+              description: PBR Texture of the ground.
+          type: object
+        type: array
+      syclops_plugin_object:
+        description: Places individual 3D objects in the scene.
+        items:
+          if:
+            properties:
+              place_on_ground:
+                const: true
+            required:
+            - place_on_ground
+          properties:
+            class_id:
+              description: Class ID for ground truth output.
+              type: integer
+            class_id_offset:
+              additionalProperties:
+                type: integer
+              description: Class ID offset for ground truth output. The keys are the
+                name of the material and the values are the offsets.
+              type: object
+            decimate_mesh_factor:
+              description: Factor between 0-1 that decimates the number of vertices
+                of the mesh. Lower means less vertices.
+              type: number
+            floor_object:
+              description: Name of the floor object to scatter on.
+              type: string
+            frame_id:
+              description: Transformation tree node to attach to.
+              type: string
+            max_texture_size:
+              description: Maximum texture size in pixel. Will reduce the texture
+                to save GPU RAM.
+              type: integer
+            models:
+              description: 3D assets to scatter.
+              oneOf:
+              - items:
+                  $ref: '#/definitions/asset_models'
+                type: array
+              - $ref: '#/definitions/asset_models'
+            name:
+              description: Unique identifier of the plugin
+              type: string
+            place_on_ground:
+              default: false
+              description: If true, the object will be placed on the ground.
+              type: boolean
+          required:
+          - name
+          - models
+          - frame_id
+          - class_id
+          then:
+            required:
+            - floor_object
+          type: object
+        type: array
+      syclops_plugin_scatter:
+        description: Scatters 3D assets on a floor object.
+        items:
+          properties:
+            align_to_normal:
+              description: If objects should be aligned to the normal of the surface.
+              type: boolean
+            class_id:
+              description: Class ID for ground truth output.
+              type: integer
+            class_id_offset:
+              additionalProperties:
+                type: integer
+              description: Class ID offset for ground truth output. The keys are the
+                name of the material and the values are the offsets.
+              type: object
+            clumps:
+              description: Optional creation of clumps
+              properties:
+                position_std:
+                  description: Stander deviation of the plant location to the clump
+                    center in meters.
+                  type: number
+                ratio:
+                  description: Ratio of clumped vs non clumped objects.
+                  type: number
+                scale_std:
+                  description: Scale standard deviation of the plants
+                  type: number
+                size:
+                  description: Number of plants per clump.
+                  type: number
+                size_std:
+                  description: Standard deviation of the number of plants per clump.
+                  type: number
+              required:
+              - ratio
+              - size
+              - size_std
+              - position_std
+              - scale_std
+              type: object
+            decimate_mesh_factor:
+              description: Factor between 0-1 that decimates the number of vertices
+                of the mesh. Lower means less vertices.
+              type: number
+            density_map:
+              $ref: '#/definitions/image_texture_evaluation'
+              description: Texture that alters the density. It is normalized to 0-1
+                and multiplied with the density_max at each spatial locataion.
+            density_max:
+              $ref: '#/definitions/number_evaluation'
+              description: Maximum density per square meter.
+            distance_min:
+              $ref: '#/definitions/number_evaluation'
+              description: Minimum distance between each object origin.
+            floor_object:
+              description: Name of the floor object to scatter on.
+              type: string
+            max_texture_size:
+              description: Maximum texture size in pixel. Will reduce the texture
+                to save GPU RAM.
+              type: integer
+            models:
+              description: 3D assets to scatter.
+              oneOf:
+              - items:
+                  $ref: '#/definitions/asset_models'
+                type: array
+              - $ref: '#/definitions/asset_models'
+            name:
+              description: Unique identifier of the plugin
+              type: string
+            scale_standard_deviation:
+              $ref: '#/definitions/number_evaluation'
+              description: Scale variance of the scattered objects.
+            seed:
+              $ref: '#/definitions/number_evaluation'
+              description: Random seed for the scattering.
+          required:
+          - name
+          - models
+          - floor_object
+          - density_max
+          - distance_min
+          - scale_standard_deviation
+          - seed
+          - class_id
+          type: object
+        type: array
+      syclops_plugin_simulated_scatter:
+        description: Scatters 3D assets on a floor object and simulates physics to
+          drop them on the surface.
+        items:
+          properties:
+            convex_decomposition_quality:
+              description: Quality setting for the convex decomposition. Higher means
+                more accurate but slower. Range 1-100.
+              type: integer
+            decimate_mesh_factor:
+              description: Factor between 0-1 that decimates the number of vertices
+                of the mesh. Lower means less vertices.
+              type: number
+            density:
+              description: Density of objects per square meter.
+              type: number
+            density_texture:
+              $ref: '#/definitions/image_texture_evaluation'
+              description: Texture that alters the density per pixel. Needs to be
+                a single channel image that is normalized to 0-1.
+            floor_object:
+              description: Name of the floor object to scatter on.
+              type: string
+            max_texture_size:
+              description: Maximum texture size in pixel. Will reduce the texture
+                to save GPU RAM.
+              type: integer
+            models:
+              description: 3D assets to scatter.
+              oneOf:
+              - items:
+                  $ref: '#/definitions/asset_models'
+                type: array
+              - $ref: '#/definitions/asset_models'
+            name:
+              description: Unique identifier of the plugin
+              type: string
+            scale_std:
+              description: Standard deviation of the scale randomization.
+              type: number
+            simulation_steps:
+              description: Number of simulation steps to run.
+              type: integer
+          required:
+          - name
+          - models
+          - floor_object
+          - density
+          - scale_std
+          - convex_decomposition_quality
+          - simulation_steps
+          type: object
+        type: array
+    type: object
+  seeds:
+    description: Seeds for the random number generators
+    properties:
+      cycles:
+        description: Seed for the Cycles renderer
+        type: integer
+      numpy:
+        description: Seed for the Numpy random number generator
+        type: integer
+    required:
+    - numpy
+    - cycles
+    type: object
+  sensor:
+    additionalProperties: false
+    properties:
+      syclops_sensor_camera:
+        description: Basic camera sensor.
+        items:
+          allOf:
+          - if:
+              properties:
+                motion_blur:
+                  properties:
+                    enabled:
+                      const: true
+            required:
+            - motion_blur
+            then:
+              required:
+              - shutter_speed
+          properties:
+            depth_of_field:
+              description: Settings for the depth of field of the camera
+              properties:
+                aperture:
+                  description: f-number of the aperture.
+                  type: number
+                autofocus:
+                  description: Wether the camera should focus on the object in the
+                    center of the image.
+                  type: boolean
+                focus_distance:
+                  description: Fixed focus distance of the camera in m.
+                  type: number
+              type: object
+            exposure:
+              $ref: '#/definitions/number_evaluation'
+              description: Exposure offset in stops.
+            focal_length:
+              $ref: '#/definitions/number_evaluation'
+              description: Focal length of the camera in mm.
+            frame_id:
+              description: Transformation tree node to attach to.
+              type: string
+            frustum:
+              description: Settings for the camera frustum visualization
+              properties:
+                color:
+                  description: RGB color of the frustum
+                  items:
+                    type: number
+                  type: array
+                depth:
+                  description: Depth of the frustum in meters
+                  type: number
+                enabled:
+                  description: Whether to enable frustum visualization
+                  type: boolean
+                hide_render:
+                  description: Whether to hide frustum in final render
+                  type: boolean
+                transparency:
+                  description: Transparency value between 0-1
+                  type: number
+                type:
+                  description: Type of frustum visualization (e.g. pyramid)
+                  type: string
+                wireframe:
+                  description: Settings for wireframe rendering
+                  properties:
+                    enabled:
+                      description: Whether to render as wireframe
+                      type: boolean
+                    thickness:
+                      description: Thickness of wireframe lines
+                      type: number
+                  type: object
+              type: object
+            gamma:
+              $ref: '#/definitions/number_evaluation'
+              description: Gamma correction applied to the image. 1 being no change
+                in gamma.
+            motion_blur:
+              description: Settings for the motion blur of the camera.
+              properties:
+                enabled:
+                  type: boolean
+                rolling_shutter:
+                  properties:
+                    duration:
+                      description: Exposure time of the Scanline in seconds.
+                      type: number
+                    enabled:
+                      type: boolean
+                  type: object
+              type: object
+            name:
+              description: Unique identifier of the sensor
+              type: string
+            outputs:
+              additionalProperties: false
+              properties:
+                syclops_output_keypoints:
+                  $ref: '#/definitions/syclops_output_keypoints'
+                syclops_output_object_positions:
+                  $ref: '#/definitions/syclops_output_object_positions'
+                syclops_output_pixel_annotation:
+                  $ref: '#/definitions/syclops_output_pixel_annotation'
+                syclops_output_rgb:
+                  $ref: '#/definitions/syclops_output_rgb'
+              type: object
+            resolution:
+              description: Width and height of the camera in pixel.
+              items:
+                type: integer
+              maxItems: 2
+              minItems: 2
+              type: array
+            sensor_width:
+              $ref: '#/definitions/number_evaluation'
+              description: Width of the sensor in mm.
+            shutter_speed:
+              description: Shutter speed in seconds. Only effects the strength of
+                motion blur.
+              type: number
+          required:
+          - name
+          - frame_id
+          - resolution
+          - focal_length
+          - sensor_width
+          - outputs
+          type: object
+        type: array
+    type: object
+  steps:
+    description: Number of datapoints to generate
+    type: integer
+  textures:
+    additionalProperties:
+      additionalProperties: false
+      properties:
+        config:
+          properties:
+            bit_depth:
+              description: Bit depth of the texture. Only 8 and 16 are supported.
+              enum:
+              - 8
+              - 16
+              type: integer
+            image_size:
+              description: Size of the texture in pixels
+              items:
+                type: integer
+              maxItems: 2
+              minItems: 2
+              type: array
+            num_textures:
+              description: Number of textures to generate. During rendering, the textures
+                will be randomly selected.
+              type: integer
+            seed:
+              type: integer
+          required:
+          - image_size
+          - bit_depth
+          - seed
+          - num_textures
+          type: object
+        ops:
+          description: List of operations to perform on texture. Operations are applied
+            in order.
+          items:
+            oneOf:
+            - $ref: '#/definitions/perlin'
+            - $ref: '#/definitions/math_expression'
+            - $ref: '#/definitions/input_texture'
+            - $ref: '#/definitions/erode'
+            - $ref: '#/definitions/dilate'
+            - $ref: '#/definitions/clip'
+            - $ref: '#/definitions/blur'
+            - $ref: '#/definitions/contrast'
+            - $ref: '#/definitions/keep_overlapp'
+            - $ref: '#/definitions/random_rectangles'
+          minItems: 1
+          type: array
+      type: object
+    description: Dynamically generated textures for the scene.
+    type: object
+  transformations:
+    additionalProperties:
+      $ref: '#/definitions/transformation'
+    description: Transformation tree for the scene
+    type: object
+required:
+- steps
+- seeds
+- render_device
+- denoising_enabled
+type: object

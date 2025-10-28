@@ -49,6 +49,18 @@ assets:
     roughness_filepath_md5: 4e047a601af768eded6468faab4ec615
     thumbnail:
       - thumbnails\Muddy Dry Ground_0.jpg
+  Paving Stones:
+    type: pbr_texture
+    tags: [stone, grey, ground]
+    license: CC0
+    texture_size: 1.0 # in meters
+    texture_displacement_scale: 0.05
+    diffuse_filepath: textures/paving_stone/PavingStones131_2K-JPG_Color.jpg
+    displacement_filepath: textures/paving_stone/PavingStones131_2K-JPG_Displacement.jpg
+    normal_filepath: textures/paving_stone/PavingStones131_2K-JPG_NormalGL.jpg
+    roughness_filepath: textures/paving_stone/PavingStones131_2K-JPG_Roughness.jpg
+    thumbnail:
+      - thumbnails\Paving Stone.jpg
   Sunflower Field:
     type: environment_texture
     tags: [sunflower, field, sunlight, outdoors]

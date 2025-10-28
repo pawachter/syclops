@@ -175,3 +175,4 @@ postprocessing:
       id: yolo_bound_boxes
       sources: ["main_cam_instance", "main_cam_semantic"]
       multiple_bb_per_instance: False
+

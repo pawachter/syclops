@@ -1,0 +1,80 @@
+denoising_algorithm: OPENIMAGEDENOISE
+denoising_enabled: true
+render_device: GPU
+render_hardware: CUDA
+scene:
+  syclops_plugin_crop:
+  - class_id: 2
+    crop_angle: 0.0
+    floor_object: Ground
+    models:
+    - Assets_own/bbch_15
+    name: crop_1
+    plant_distance: 0.4
+    plant_standard_deviation: 0.2
+    row_distance: 0.8
+    row_standard_deviation: 0.32
+    scale_standard_deviation: 0.5
+    seed: 1
+  syclops_plugin_environment:
+  - environment_image:
+      random_selection:
+      - Assets_own/Field
+    type: hdri
+  syclops_plugin_ground:
+  - class_id: 1
+    name: Ground
+    size: 50
+    texture: Example Assets/Muddy Dry Ground
+seeds:
+  cycles: 42
+  numpy: 42
+sensor:
+  syclops_sensor_camera:
+  - exposure: 0.3
+    focal_length: 40.0
+    frame_id: camera_link
+    gamma: 1.4
+    name: main_camera
+    outputs:
+      syclops_output_pixel_annotation:
+      - instance_segmentation:
+          id: main_cam_instance
+        semantic_segmentation:
+          id: main_cam_semantic
+      syclops_output_rgb:
+      - id: main_cam_rgb
+        samples: 2
+    resolution:
+    - 2048
+    - 2048
+    sensor_width: 35.0
+steps: 1
+transformations:
+  map:
+    children:
+      camera_link:
+        location:
+          linear:
+          - - -8
+            - -12
+            - 1
+          - - 0.5
+            - 0.5
+            - 0.2
+        rotation:
+          normal:
+          - - 1.3
+            - 0
+            - 0
+          - - 0.05
+            - 0.05
+            - 0.05
+    location:
+    - 0
+    - 0
+    - 0
+    rotation:
+    - 0
+    - 0
+    - 0

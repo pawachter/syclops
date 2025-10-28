@@ -1,7 +1,6 @@
 # Syclops
 ![Documentation](https://github.com/dfki-ni/syclops/actions/workflows/docs_deployment.yaml/badge.svg)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.07854/status.svg)](https://doi.org/10.21105/joss.07854)
-
 <h1 align="center">
   <img alt="cgapp logo" src="https://user-images.githubusercontent.com/40243985/222779654-df09c551-3eab-4a08-aa3c-08ab6cfd73ab.png" width="224px"/><br/>
   Syclops
@@ -54,9 +53,7 @@ Syclops supports a variety of annotated outputs for different use cases. The fol
 
 Before you install `Syclops`, ensure you have the following prerequisites:
 
-- ✅ **Tested Python Versions**
-    - Python 3.9 – 3.11
-- ❌ Not yet compatible with Python 3.12+
+- Python version 3.9 or higher.
 
 We recommend using a virtual environment to avoid potential package conflicts. Below are instructions for setting up with `virtualenv` and `conda`.
 
@@ -109,12 +106,6 @@ cd syclops
 pip install .
 ```
 
-### Note for macOS Users
-
-⚠️ **IMPORTANT**: Syclops is **not currently supported on macOS**. While installation theoretically might be possible, it has not been tested and likely will not work properly. If you attempt to use Syclops on macOS, Blender would be downloaded as a `.dmg` file for your architecture (arm64 or x64), but full functionality cannot be guaranteed.
-
-We recommend using Linux or Windows for the best experience with Syclops.
-
 ## Run a job
 
 Next, the assets need to be crawled by the pipeline. This only needs to be done once, or if new assets are added.
@@ -162,7 +153,6 @@ Saxony and the VolkswagenStiftung.
   <img alt="AgriGaia" src="docs/docs/img/bmwk.png" height="150"/>
 </p>
 
-
 # Citation
 If used in research, please cite Syclops:
 ```
@@ -175,4 +165,5 @@ If used in research, please cite Syclops:
  title = {Syclops: A Modular Pipeline for Procedural Generation of Synthetic Data},
  journal = {Journal of Open Source Software}
  }
-```
+ ```
+

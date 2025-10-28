@@ -1,0 +1,132 @@
+steps: 1
+seeds:
+  numpy: 42
+  cycles: 42
+render_device: "GPU"
+render_hardware: "CUDA"
+denoising_enabled: True
+denoising_algorithm: "OPENIMAGEDENOISE"
+
+# TRANSFORMATION CONFIG
+
+transformations:
+  map:
+    location: [0, 0, 0]
+    rotation: [0, 0, 0]
+
+    children:
+      camera_link:
+        # Pull the camera back on Y, a bit to the left on X and lift it on Z
+        location:
+          # 1st triple  = nominal position
+          # 2nd triple  = amount of random jitter that is allowed per render
+          linear: [[-8, -12, 1], [0.5, 0.5, 0.2]]
+
+        rotation:
+          # 0.35 rad ≈ 20° downward pitch.
+          # Y- & Z-rotation left at 0 with a little noise to avoid
+          # a perfectly repeated framing.
+          normal: [[1.3, 0, 0], [0.05, 0.05, 0.05]]
+
+      iso_object:
+        location:
+          uniform: [[-20, -20, 0], [20, 20, 0]]
+        rotation: [0, 0, 0]
+textures:
+  plain_noise:
+    config:
+      image_size: [2048, 2048]
+      bit_depth: 16
+      seed: 2
+      num_textures: 2
+    ops:
+      - perlin:
+          octaves: 4
+      - math_expression: "((x-0.5) * 100 + 65535 / 2)/65535"
+
+# SCENE CONFIG
+scene:
+  syclops_plugin_ground:
+    - name: "Ground"
+      size: 50 # m
+      texture: Example Assets/Muddy Dry Ground
+      # displacement_texture: Example Assets/Ground Displacement 1
+      displacement_texture: Preprocessed Assets/plain_noise
+      class_id: 1
+
+  syclops_plugin_environment:
+    - type: hdri
+      environment_image:
+        random_selection: [Assets_own/Field]
+
+  syclops_plugin_crop:
+    - name: "bbch_15"
+      models: [Assets_own/bbch_15]
+      floor_object: Ground
+      crop_angle: 0 # degrees; [-90, 90] possible
+      row_distance: 0.8 # m
+      row_standard_deviation: 0.32 # m
+      plant_distance: 0.4
+      plant_standard_deviation: 0.2 # m
+      scale_standard_deviation: 0.5
+      class_id: 2
+      class_id_offset:
+        Stem: 1
+      seed: 1
+
+# SENSOR CONFIG
+sensor:
+  syclops_sensor_camera:
+    - name: "main_camera"
+      # Location, rotation and velocity of camera is optional if frame_id is set
+      frame_id: "camera_link"
+      resolution: [2048, 2048]
+      focal_length: 40 # mm
+      shutter_speed: 0.02 # s Currently only affects motion blur
+      sensor_width: 35 # mm
+
+      exposure: 0.3 # Exposure (stops) shift of camera
+      gamma: 1.4 # Gamma correction applied to the image
+
+      depth_of_field:
+        aperture: 6.6 # f-number (no influence on exposure)
+        autofocus: true
+        #focus_distance: 2 # m (disabled because of autofocus)
+
+      motion_blur:
+        enabled: false
+        rolling_shutter: # Only top to bottom supported
+          enabled: true
+          duration: 0.02 # s (Scanline "exposure" time)
+      outputs:
+        syclops_output_rgb:
+          - samples: 256
+            compositor:
+              chromatic_aberration: 0.006 #Strong aberration can cause shift between ground truth and rgb
+              bloom:
+                threshold: 1.2 # higher is less bloom
+            debug_breakpoint: True
+            id: main_cam_rgb
+        syclops_output_object_positions:
+          - id: main_cam_object_positions
+        syclops_output_keypoints:
+          - id: main_cam_keypoints
+        syclops_output_pixel_annotation:
+          - semantic_segmentation:
+              id: main_cam_semantic
+            instance_segmentation:
+              id: main_cam_instance
+            pointcloud:
+              id: main_cam_pointcloud
+            depth:
+              id: main_cam_depth
+            object_volume:
+              id: main_cam_object_volume
+
+postprocessing:
+  syclops_postprocessing_bounding_boxes:
+    - type: "YOLO"
+      classes_to_skip: [0,1]
+      id: yolo_bound_boxes
+      sources: ["main_cam_instance", "main_cam_semantic"]
+      multiple_bb_per_instance: False
